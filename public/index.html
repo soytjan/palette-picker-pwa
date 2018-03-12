@@ -5,10 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/reset.css" type="text/css">
   <link rel="stylesheet" href="./css/styles.css" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <title>Palette Picker</title>
 </head>
 <body>
-  <h1>I am a palette picker!</h1>
+  <header>
+    <h1>Palette Picker</h1>
+  </header>
+  <section class='top-section'>
+    <section class='colors-cont'>
+      <article class='color-box'>
+        <div class='color-details-cont'>
+          <button>Lock</button>
+          <h4>#FFFFFF</h4>
+        </div>
+      </article>
+      <article class='color-box'>
+        <div class='color-details-cont'>
+          <button>Lock</button>
+          <h4>#FFFFFF</h4>
+        </div>
+      </article>
+      <article class='color-box'>
+        <div class='color-details-cont'>
+          <button>Lock</button>
+          <h4>#FFFFFF</h4>
+        </div>
+      </article>
+      <article class='color-box'>
+        <div class='color-details-cont'>
+          <button>Lock</button>
+          <h4>#FFFFFF</h4>
+        </div>
+      </article>
+      <article class='color-box'>
+        <div class='color-details-cont'>
+          <button>Lock</button>
+          <h4>#FFFFFF</h4>
+        </div>
+      </article>
+    </section>
+    <button>Generate New Palette!</button>
+    <form class='create-palette-form'>
+      <select name="project-dropdown" id="project-dropdown">
+        <option value="project-1">Project 1</option>
+      </select>
+      <input type="text" placeholder="Palette name">
+      <button>Save Palette</button>
+    </form>
+  </section>
+  <section class='bottom-section'>
+    <form class='create-project-form'>
+      <label for='project-name-input'>Create a new project:</label>
+      <input id='project-name-input' type='text' placeholder='New project name'>
+      <button>Save Project</button>
+    </form>
+    <section class='projects-cont'>
+      <article class='project-cont'>
+        <h3>Project 1</h3>
+        <div class='small-palette-cont'>
+          <button>Palette 1</button>
+          <div class='small-palette-cont'>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+          </div>
+          <button class='delete-palette-btn'>Delete Me</button>
+        </div>
+      </article>
+      <article class='project-cont'>
+        <h3>Project 2</h3>
+        <div class='small-palette-cont'>
+          <button>Fun Colors</button>
+          <div class='small-colors-cont'>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+            <div class='small-palette-color'></div>
+          </div>
+          <button class='delete-palette-btn'>Delete Me</button>
+        </div>
+      </article>
+    </section>
+  </section>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="./js/scripts.js"></script>
 </body>
