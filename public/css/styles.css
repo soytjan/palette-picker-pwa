@@ -44,6 +44,10 @@ header {
   width: 250px;
 }
 
+.hex-text {
+  color: rgba(255,255,255, 0.6);
+}
+
 .color-details-cont {
   text-align: center;
 }
