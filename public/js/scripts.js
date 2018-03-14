@@ -58,10 +58,10 @@ const loadProjects = async () => {
   const projects = await fetchProjects();
 
   projects.forEach((project) => {
-    const { id } = project;
+    const { id, name } = project;
 
     appendProject(project)
-    appendOption(project)
+    appendOption(id, name)
   })
 }
 
@@ -69,7 +69,7 @@ const fetchProjects = async () => {
   const response = await fetch('/api/v1/projects');
   const jsonResponse = await response.json();
   
-  return jsonResponse.projects;
+  return jsonResponse
 }
 
 const appendProject = async (project) => {
@@ -86,19 +86,26 @@ const appendProject = async (project) => {
   `)
 }
 
-const genSwatchesHtml = (projId, colors) => {
-  const swatches = colors.map((color) => {
-    return `<div class='small-palette-color' style='background-color: ${color}'></div>`;
-  })
+const genSwatchesHtml = (palette) => {
+  let paletteColors = [];
 
-  return swatches;
+  for (let i = 1; i <= 5; i++) {
+    const hexCode = palette[`color_${i}`]
+    const swatchHtml = (
+      `<div class='small-palette-color' style='background-color: ${hexCode}'></div>`
+    )
+    
+    paletteColors = [...paletteColors, swatchHtml]
+  }
+
+  return paletteColors;
 }
 
 const genPalettesHtml = async (projId) => {
   const jsonPalettes = await fetchProjPalettes(projId);
   const htmlPalettes = jsonPalettes.map((palette) => {
-    const { name, id, colors } = palette;
-    const swatches = genSwatchesHtml(projId, colors);
+    const { name, id } = palette;
+    const swatches = genSwatchesHtml(palette);
 
     return (`
       <button>${name}</button>
@@ -118,9 +125,9 @@ const fetchProjPalettes = async (projId) => {
   return await palettes.json();
 }
 
-const appendOption = ({ name }) => {
+const appendOption = (projId, projName) => {
   $('#project-dropdown').append(`
-    <option value=${name}>${name}</option>
+    <option value=${projId}>${projName}</option>
   `)
 }
 
