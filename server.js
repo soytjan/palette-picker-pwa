@@ -28,6 +28,10 @@ app.get('/api/v1/projects/', (request, response) => {
   response.status(200).json({ projects });
 });
 
+app.get('/api/v1/palettes', (request, response) => {
+  
+})
+
 app.get('/api/v1/projects/:id/palettes/', (request, response) => {
   const { id } = request.params;
   const palettes = app.locals.palettes[id];
