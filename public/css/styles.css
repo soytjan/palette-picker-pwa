@@ -7,6 +7,18 @@ body {
  font-family: 'Open Sans', sans-serif;
 }
 
+h1 {
+  font-size: 2.5em;
+}
+
+header {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FEE58B;
+}
+
 button {
   border: none;
   font-size: 1em;
@@ -20,14 +32,17 @@ input {
   font-size: 1em;
 }
 
-header {
-  text-align: center;
+.header-icon {
+  height: 55px;
+  width: 55px;
+  margin-right: 15px;
 }
 
 .top-section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 30px 15px;
 }
 
 .colors-cont {
@@ -36,7 +51,6 @@ header {
 }
 
 .color-box {
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -51,6 +65,13 @@ header {
 .color-details-cont {
   text-align: center;
   background-color: white;
+  border: 1px solid #D6D6D1;
+  border-top: none;
+  padding: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .lock-btn {
@@ -63,6 +84,8 @@ header {
 .lock-btn.locked {
   background: url('../assets/closed-lock.png');
   background-size: cover;
+  height: 35px;
+  width: 35px;
 }
 
 .bottom-section {
