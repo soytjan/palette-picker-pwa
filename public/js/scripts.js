@@ -29,7 +29,7 @@ const handleGenColors = () => {
     const hexCode = genRandHex()
 
     $(`#${color}`).css('background-color', hexCode);
-    $(`#${color}-hex`).text(hexCode);
+    $(`#${color}-hex`).text(hexCode.toUpperCase());
   })
 }
 
