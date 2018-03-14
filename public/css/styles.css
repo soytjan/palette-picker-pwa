@@ -45,11 +45,24 @@ header {
 }
 
 .hex-text {
-  color: rgba(255,255,255, 0.6);
+  color: black;
 }
 
 .color-details-cont {
   text-align: center;
+  background-color: white;
+}
+
+.lock-btn {
+  background: url('../assets/open-lock.png');
+  background-size: cover;
+  height: 35px;
+  width: 35px;
+}
+
+.lock-btn.locked {
+  background: url('../assets/closed-lock.png');
+  background-size: cover;
 }
 
 .bottom-section {
