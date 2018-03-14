@@ -32,6 +32,7 @@ const handleGenColors = () => {
     $(`#${color}-hex`).text(hexCode);
   })
 }
+
 const genRandHex = () => {
   return '#'+Math.random().toString(16).slice(-6)
 }
@@ -74,26 +75,9 @@ const appendProject = async (project) => {
   `)
 }
 
-// const appendPalettes = async (projId) => {
-//   const palettes = await fetchProjPalettes(projId);
-
-//   palettes.forEach((palette) => {
-//     const { name, id } = palette;
-//     const swatches = genPaletteSwatches(projId, palette.colors);
-
-//     $(`#proj-${id} .small-palette-cont`).append(`
-//       <div class='small-colors-cont'>
-//         <button class='palette-name'>${name}</button>
-//         ${swatches.join('')}
-//         <button class='delete-palette-btn'>Delete Me</button>
-//       </div>
-//     `)
-//   })
-// }
-
-const genPaletteSwatches = (projId, colors) => {
-  const swatches = colors.map((color, index) => {
-    return `<div id='proj-${projId}-swatch-${index}' class='small-palette-color'></div>`;
+const genSwatchesHtml = (projId, colors) => {
+  const swatches = colors.map((color) => {
+    return `<div class='small-palette-color' style='background-color: ${color}'></div>`;
   })
 
   return swatches;
@@ -103,7 +87,7 @@ const genPalettesHtml = async (projId) => {
   const jsonPalettes = await fetchProjPalettes(projId);
   const htmlPalettes = jsonPalettes.map((palette) => {
     const { name, id, colors } = palette;
-    const swatches = genPaletteSwatches(projId, colors);
+    const swatches = genSwatchesHtml(projId, colors);
 
     return (`
       <button>${name}</button>
@@ -119,6 +103,7 @@ const genPalettesHtml = async (projId) => {
 
 const fetchProjPalettes = async (projId) => {
   const palettes = await fetch(`/api/v1/projects/${projId}/palettes/`);
+
   return await palettes.json();
 }
 
