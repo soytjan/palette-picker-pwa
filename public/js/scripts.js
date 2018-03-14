@@ -1,7 +1,7 @@
 $(window).on('load', () => handleGenColors())
 $(window).on('load', () => loadProjects())
 $('#gen-colors-btn').on('click', () => handleGenColors())
-$('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', toggleLock)
+$('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', handleLockClick)
 
 const colorBoxes = (() => {
   let boxIds = ['color-box-1', 'color-box-2', 'color-box-3', 'color-box-4', 'color-box-5'];
@@ -37,10 +37,21 @@ const genRandHex = () => {
   return '#'+Math.random().toString(16).slice(-6)
 }
 
+function handleLockClick() {
+  const btnId = this.id;
+  console.log('id', btnId)
+  toggleLock.call(this)
+  toggleLockIcon(btnId)
+}
+
 function toggleLock() {
   const colorBoxId = this.closest('.color-box').id;
 
   colorBoxes.updateColors(colorBoxId)
+}
+
+const toggleLockIcon = (btnId) => {
+  $(`#${btnId}`).toggleClass('locked')
 }
 
 const loadProjects = async () => {
