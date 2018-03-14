@@ -61,18 +61,25 @@ header {
 .projects-cont {
   display: flex;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .project-cont {
-  width: 40%;
+  width: 45%;
+  border: 1px solid turquoise;
 }
 
 .small-palette-cont {
   display: flex;
+  flex-direction: column;
 }
 
 .small-colors-cont {
   display: flex;
+}
+
+.palette-name {
+  width: 150px;
 }
 
 .small-palette-color {
