@@ -70,8 +70,8 @@ app.post('/api/v1/palettes', (request, response) => {
   }
 
   database('palettes').insert(palette, 'id')
-    .then(palette => {
-      response.status(201).json({ id: palette[0] })
+    .then(pal => {
+      response.status(201).json({ ...palette, id: pal[0] })
     })
     .catch(error => {
       response.status(500).json({ error })
