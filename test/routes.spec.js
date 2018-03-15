@@ -3,6 +3,10 @@ const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
 
+const environment = process.env.NODE_ENV || 'test';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 chai.use(chaiHttp);
 
 describe('Client Routes', () => {
@@ -31,6 +35,19 @@ describe('Client Routes', () => {
 });
 
 describe('API Routes', () => {
+  beforeEach((done) => {
+    database.migrate.rollback()
+    .then(() => {
+      database.migrate.latest()
+      .then(() => {
+        return database.seed.run()
+        .then(() => {
+          done()
+        })
+      })
+    })
+  })
+
   describe('GET /api/v1/projects', () => {
     it('should return all of the projects', () => {
       return chai.request(server)
@@ -63,7 +80,8 @@ describe('API Routes', () => {
           response.body.should.be.a('object');
           response.body.should.have.property('name');
           response.body.name.should.equal('Sad Project');
-          response.body.should.have.property()
+          response.body.should.have.property('id');
+          response.body.id.should.equal(2);
         })
         .catch(error => {
           throw error;
@@ -102,4 +120,15 @@ describe('API Routes', () => {
         })
     });
   });
+
+  // describe('POST /api/v1/palettes', () => {
+  //   it('should create a new palette', () => {
+  //     return chai.request(server)
+  //       .post('/api/v1/palettes')
+  //       .send({
+  //         name: 'Tron Palette',
+  //         project_id: 
+  //       })
+  //   })
+  // })
 });
