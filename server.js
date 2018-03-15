@@ -2,37 +2,94 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';
 
 app.use(bodyParser.json());
 app.use(express.static('public'))
 
-app.locals.projects = [
-  {id: 1, name: 'Happy Project'},
-  {id: 2, name: 'So Sleepy Project'}
-];
-
-app.locals.palettes = {
-  1: [{ projectId: 1, name: 'Warm Colors', colors: ['#3E92CC', '#3E92CC', '#3E92CC', '#3E92CC','#3E92CC'], id: 1}, { projectId: 1, name: 'Color Colors', colors: ['#3E92CC', '#3E92CC', '#3E92CC', '#3E92CC','#3E92CC'], id: 2}],
-  2: [{ projectId: 2, name: 'Darkness', colors: ['#59F8E8', '#59F8E8', '#59F8E8', '#59F8E8', '#59F8E8'], id: 1}]
-}
-
 app.get('/', (request, response) => {
 
 });
 
 app.get('/api/v1/projects/', (request, response) => {
-  const { projects } = app.locals;
-
-  response.status(200).json({ projects });
+  database('projects').select()
+    .then(projects => {
+      response.status(200).json(projects);
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
-app.get('/api/v1/projects/:id/palettes/', (request, response) => {
-  const { id } = request.params;
-  const palettes = app.locals.palettes[id];
+app.post('/api/v1/projects/', (request, response) => {
+  const project = request.body;
 
-  return response.status(200).json(palettes)
+  for (let requiredParameter of ['name']) {
+    if (!project[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String> }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('projects').insert(project, 'id')
+    .then(project => {
+      response.status(201).json({ id: project[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    });
+});
+
+app.get('/api/v1/palettes', (request, response) => {
+  database('palettes').select()
+    .then(palettes => {
+      response.status(200).json(palettes);
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/palettes', (request, response) => {
+  const palette = request.body;
+
+  for (let requiredParameter of ['name', 'color_1', 'color_2', 'color_3', 'color_4', 'color_5', 'project_id']) {
+    if (!palette[requiredParameter]) {
+      return response
+        .status(422)
+        .send({error: `Expected format: { name: <String>, color_1: <String>, color_2: <String>, color_3: <String>, color_4: <String>, color_5: <String>, project_id: <Integer> }. You're missing a "${requiredParameter}" property.`})
+    }
+  }
+
+  database('palettes').insert(palette, 'id')
+    .then(palette => {
+      response.status(201).json({ id: palette[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    });
+})
+
+app.get('/api/v1/projects/:id/palettes/', (request, response) => {
+  database('palettes').where('project_id', request.params.id).select()
+    .then(palettes => {
+      if (palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).json({
+          error: `Could not find pallettes associated with project id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
 app.listen(app.get('port'), () => {

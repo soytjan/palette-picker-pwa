@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/reset.css" type="text/css">
   <link rel="stylesheet" href="./css/styles.css" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet">
   <title>Palette Picker</title>
 </head>
 <body>
   <header>
+    <img src="./assets/paint-palette.png" class='header-icon'>
     <h1>Palette Picker</h1>
   </header>
   <section class='top-section'>
@@ -46,11 +47,10 @@
       </article>
     </section>
     <button id='gen-colors-btn'>Generate New Palette!</button>
-    <form class='create-palette-form'>
+    <form id='save-palette-form' class='create-palette-form'>
       <select name="project-dropdown" id="project-dropdown">
-        <option value="project-1">Project 1</option>
       </select>
-      <input type="text" placeholder="Palette name">
+      <input id='palette-input' type="text" placeholder="Palette name">
       <button>Save Palette</button>
     </form>
   </section>
