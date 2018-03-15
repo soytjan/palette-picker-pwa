@@ -2,6 +2,8 @@ $(window).on('load', () => handleGenColors())
 $(window).on('load', () => loadProjects())
 $('#gen-colors-btn').on('click', () => handleGenColors())
 $('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', handleLockClick)
+$('#save-palette-form').submit((e) => handlePaletteSubmit(e))
+$('.create-project-form').submit((e) => handleProjectSubmit(e))
 
 const colorBoxes = (() => {
   let boxIds = ['color-box-1', 'color-box-2', 'color-box-3', 'color-box-4', 'color-box-5'];
@@ -103,6 +105,11 @@ const genSwatchesHtml = (palette) => {
 
 const genPalettesHtml = async (projId) => {
   const jsonPalettes = await fetchProjPalettes(projId);
+
+  if (jsonPalettes.error) {
+    return [];
+  }
+
   const htmlPalettes = jsonPalettes.map((palette) => {
     const { name, id } = palette;
     const swatches = genSwatchesHtml(palette);
@@ -129,6 +136,71 @@ const appendOption = (projId, projName) => {
   $('#project-dropdown').append(`
     <option value=${projId}>${projName}</option>
   `)
+}
+
+const handlePaletteSubmit = (e) => {
+  e.preventDefault()
+  const projName = $('select').val()
+  const paletteName = $('#palette-input').val();
+  const hexCodes = getHexCodes();
+  const newPalette = {...hexCodes, name: paletteName, project_id: parseInt(projName)};
+  console.log(newPalette)
+
+  postPalette(newPalette);
+
+  $('#palette-input').val('');
+}
+
+const handleProjectSubmit = (e) => {
+  e.preventDefault();
+  console.log('handle project submit')
+  const projName = $('#project-name-input').val();
+  const newProj = { name: projName }
+  
+  postProject(newProj);
+}
+
+const postProject = (proj) => {
+  fetch('/api/v1/projects/', {
+    method: 'POST',
+    body: JSON.stringify(proj),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(res => res.json())
+  .catch(err => console.error(err))
+  .then(res => {
+    console.log(res)
+    // call append and add to option
+    $('.projects-cont').fadeOut(1000);
+    $('.projects-cont').fadeIn(1000);
+  });
+}
+
+const postPalette = (palette) => {
+  fetch('/api/v1/palettes/', {
+    method: 'POST',
+    body: JSON.stringify(palette),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(res => res.json())
+  .catch(err => console.error(err))
+  .then(res => {
+    console.log(res);
+  })
+}
+
+const getHexCodes = () => {
+  let hexCodes = {};
+
+  for (let i = 1; i <= 5; i++) {
+    const hexCode = $(`#color-box-${i}-hex`).text();
+
+    hexCodes = {...hexCodes, [`color_${i}`]: hexCode};
+  }
+
+  return hexCodes;
 }
 
 
