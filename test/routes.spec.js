@@ -87,6 +87,21 @@ describe('API Routes', () => {
           throw error;
       });
     });
+
+    it('should not create a project with missing data', () => {
+      return chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+          notName: 'herrow'
+        })
+        .then(response => {
+          response.should.have.status(422);
+          response.body.error.should.equal('Expected format: { name: <String> }. You\'re missing a "name" property.');
+        })
+        .catch(error => {
+          throw error;
+      });
+    });
   });
 
   describe('GET /api/v1/palettes', () => {
