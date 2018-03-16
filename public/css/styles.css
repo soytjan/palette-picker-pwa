@@ -25,6 +25,7 @@ header {
 button {
   border: none;
   font-size: 1em;
+  outline: none;
 }
 
 button:hover {
@@ -36,11 +37,15 @@ input {
   font-family: 'Lato', sans-serif;
   font-size: 1em;
   padding: 5px;
+  outline: none;
 }
  
 select {
+  background: transparent;
+  border: none;
   font-family: 'Lato', sans-serif;
   font-size: 1em;
+  outline: none;
 }
 
 #gen-colors-btn {
@@ -48,6 +53,11 @@ select {
   font-size: 1.2em;
   padding: 10px 15px;
   margin: 10px 0 20px;
+}
+
+.select-div {
+  display: inline-block;
+  background-color: #3DA5D9; 
 }
 
 .header-icon {
