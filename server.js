@@ -97,7 +97,7 @@ app.get('/api/v1/projects/:id/palettes/', (request, response) => {
 app.delete('/api/v1/palettes/', (request, response) => {
   database('palettes').where('id', request.body.id).del()
     .then(palette => {
-      response.status(200).json(palette);
+      response.status(200).json();
     })
     .catch(error => {
       response.status(500).json({ error });

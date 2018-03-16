@@ -213,6 +213,26 @@ describe('API Routes', () => {
         response.body[0].should.have.property('color_5');
         response.body[0].color_5.should.equal('#3E92CC');
       })
+      .catch(error => {
+        throw error;
+      })
+    })
+  })
+
+  describe('DELETE /api/v1/palettes/', () => {
+    it('should delete a palette associated with palette id', () => {
+      return chai.request(server)
+      .delete('/api/v1/palettes/')
+      .send({
+        id: 1
+      })
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+      })
+      .catch(error => {
+        throw error;
+      })
     })
   })
 });
