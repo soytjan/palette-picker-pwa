@@ -1,8 +1,8 @@
 $(window).on('load', () => handleGenColors())
 $(window).on('load', () => loadProjects())
 $('#gen-colors-btn').on('click', () => handleGenColors())
-$('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', handleLockClick)
 $('#save-palette-form').submit((e) => handlePaletteSubmit(e))
+$('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', handleLockClick)
 $('.create-project-form').submit((e) => handleProjectSubmit(e))
 $('.projects-cont').on('click', '.small-palette-cont .palette .delete-palette-btn', handleDelete)
 
@@ -25,11 +25,27 @@ const colorBoxes = (() => {
   }
 })()
 
+const projNames = (() => {
+  let projects = [];
+
+  return {
+    update: (newProj) => {
+      projects = [...projects, newProj];
+    },
+    check: (name) => {
+      return projects.includes(name);
+    },
+    get: () => {
+      return projects;
+    }
+  }
+})()
+
 const handleGenColors = () => {
   const unlockedColors = colorBoxes.getUnlockedColors();
 
   unlockedColors.forEach((color) => {
-    const hexCode = genRandHex()
+    const hexCode = genRandHex();
 
     $(`#${color}`).css('background-color', hexCode);
     $(`#${color}-hex`).text(hexCode.toUpperCase());
@@ -51,9 +67,17 @@ const handlePaletteSubmit = (e) => {
 const handleProjectSubmit = (e) => {
   e.preventDefault();
   const projName = $('#project-name-input').val();
-  const newProj = { name: projName }
-  
-  postProject(newProj);
+  const isDuplicated = projNames.check(projName);
+
+  if (isDuplicated) {
+    $('.alert').text('Choose another name. There\'s a project with that name already!')
+  } else {
+    const newProj = { name: projName }
+    
+    $('.alert').text('')
+    projNames.update(name);
+    postProject(newProj);
+  }
 }
 
 function handleDelete() {
@@ -65,15 +89,15 @@ function handleDelete() {
 
 function handleLockClick() {
   const btnId = this.id;
-  console.log('id', btnId)
-  toggleLock.call(this)
-  toggleLockIcon(btnId)
+
+  toggleLock.call(this);
+  toggleLockIcon(btnId);
 }
 
 function toggleLock() {
   const colorBoxId = this.closest('.color-box').id;
 
-  colorBoxes.updateColors(colorBoxId)
+  colorBoxes.updateColors(colorBoxId);
 }
 
 const genRandHex = () => {
@@ -89,7 +113,7 @@ const genSwatchesHtml = (palette) => {
       `<div class='small-palette-color' style='background-color: ${hexCode}'></div>`
     )
     
-    paletteColors = [...paletteColors, swatchHtml]
+    paletteColors = [...paletteColors, swatchHtml];
   }
 
   return paletteColors;
@@ -112,7 +136,7 @@ const genPalettesHtml = async (projId) => {
         <div class='small-colors-cont'>
           ${swatches.join('')}
         </div>
-        <button id=${id} class='delete-palette-btn'>Delete Me</button>
+        <button id=${id} class='delete-palette-btn'></button>
       </div>
     `)
   })
@@ -141,9 +165,10 @@ const loadProjects = async () => {
 
   projects.forEach((project) => {
     const { id, name } = project;
-
-    appendProject(project)
-    appendOption(id, name)
+    
+    projNames.update(name);
+    appendProject(project);
+    appendOption(id, name);
   })
 }
 
@@ -153,8 +178,19 @@ const appendOption = (projId, projName) => {
   `)
 }
 
-const handleAppendHtml = () => {
-  
+const appendPalette = (palette) => {
+  const {project_id, name, id} = palette;
+  const swatches = genSwatchesHtml(palette); 
+
+  $(`#proj-${project_id} .small-palette-cont`).append(`
+    <div class='palette'>
+      <button>${name}</button>
+      <div class='small-colors-cont'>
+        ${swatches.join('')}
+      </div>
+      <button id=${id} class='delete-palette-btn'></button>
+    </div>
+  `)
 }
 
 const appendProject = async (project) => {
@@ -199,7 +235,6 @@ const fetchProjPalettes = async (projId) => {
   return await palettes.json();
 }
 
-// need to post palette and then append the palette
 const postPalette = (palette) => {
   fetch('/api/v1/palettes/', {
     method: 'POST',
@@ -211,10 +246,10 @@ const postPalette = (palette) => {
   .catch(err => console.error(err))
   .then(res => {
     console.log(res);
+    appendPalette(res);
   })
 }
 
-// need to post a project and then append the project 
 const postProject = (proj) => {
   fetch('/api/v1/projects/', {
     method: 'POST',

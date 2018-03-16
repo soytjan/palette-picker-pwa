@@ -3,12 +3,15 @@
 }
 
 body {
- font-size: 16px;
- font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-family: 'Lato', sans-serif;
+  background-color: #F0F0EE;
 }
 
 h1 {
+  color: #434346;
   font-size: 2.5em;
+  font-family: 'Oswald', sans-serif;
 }
 
 header {
@@ -16,7 +19,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #FEE58B;
+  background-color: #73BFB8;
 }
 
 button {
@@ -25,11 +28,26 @@ button {
 }
 
 button:hover {
-  color: turquoise;
+  color: #EA7317;
+  cursor: pointer;
 }
 
 input {
+  font-family: 'Lato', sans-serif;
   font-size: 1em;
+  padding: 5px;
+}
+ 
+select {
+  font-family: 'Lato', sans-serif;
+  font-size: 1em;
+}
+
+#gen-colors-btn {
+  background-color: #FEC601;
+  font-size: 1.2em;
+  padding: 10px 15px;
+  margin: 10px 0 20px;
 }
 
 .header-icon {
@@ -46,8 +64,10 @@ input {
 }
 
 .colors-cont {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 10px;
+  margin: 20px 0;
 }
 
 .color-box {
@@ -60,6 +80,7 @@ input {
 
 .hex-text {
   color: black;
+  font-size: 1.1em;
 }
 
 .color-details-cont {
@@ -88,6 +109,13 @@ input {
   width: 35px;
 }
 
+.save-btn {
+  background-color: #3DA5D9;
+  color: white;
+  padding: 5px 10px;
+  font-size: 1em;
+}
+
 .bottom-section {
   display: flex;
   flex-direction: column;
@@ -102,7 +130,6 @@ input {
 
 .project-cont {
   width: 45%;
-  border: 1px solid turquoise;
 }
 
 .small-palette-cont {
@@ -114,13 +141,28 @@ input {
   display: flex;
 }
 
+.delete-palette-btn {
+  background-image: url('../assets/trash.png');
+  background-size: cover;
+  height: 25px;
+  width: 25px;
+}
+
+.delete-palette-btn:hover {
+  background-color: #FEC601; 
+}
+
 .palette-name {
-  width: 150px;
+  min-width: 170px;
+}
+
+.palette {
+  display: flex;
+  margin: 10px 0;
 }
 
 .small-palette-color {
   height: 25px;
   width: 25px;
-  background-color: pink;
-  border: 1px solid lightblue;
+  margin: 0 5px;
 }
