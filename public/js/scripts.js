@@ -36,8 +36,31 @@ const handleGenColors = () => {
   })
 }
 
-const genRandHex = () => {
-  return '#'+Math.random().toString(16).slice(-6)
+const handlePaletteSubmit = (e) => {
+  e.preventDefault()
+  const projName = $('select').val()
+  const paletteName = $('#palette-input').val();
+  const hexCodes = getHexCodes();
+  const newPalette = {...hexCodes, name: paletteName, project_id: parseInt(projName)};
+
+  postPalette(newPalette);
+
+  $('#palette-input').val('');
+}
+
+const handleProjectSubmit = (e) => {
+  e.preventDefault();
+  const projName = $('#project-name-input').val();
+  const newProj = { name: projName }
+  
+  postProject(newProj);
+}
+
+function handleDelete() {
+  const paletteId = this.id;
+
+  this.closest('.palette').remove();
+  deletePalette(paletteId);
 }
 
 function handleLockClick() {
@@ -53,40 +76,8 @@ function toggleLock() {
   colorBoxes.updateColors(colorBoxId)
 }
 
-const toggleLockIcon = (btnId) => {
-  $(`#${btnId}`).toggleClass('locked')
-}
-
-const loadProjects = async () => {
-  const projects = await fetchProjects();
-
-  projects.forEach((project) => {
-    const { id, name } = project;
-
-    appendProject(project)
-    appendOption(id, name)
-  })
-}
-
-const fetchProjects = async () => {
-  const response = await fetch('/api/v1/projects');
-  const jsonResponse = await response.json();
-  
-  return jsonResponse
-}
-
-const appendProject = async (project) => {
-  const { name, id } = project;
-  const palettes = await genPalettesHtml(id);
-
-  $('.projects-cont').append(`
-    <article id='proj-${id}' class='project-cont'>
-      <h3>${name}</h3>
-      <div class='small-palette-cont'>
-        ${palettes.join('')}
-      </div>
-    </article>
-  `)
+const genRandHex = () => {
+  return '#'+Math.random().toString(16).slice(-6)
 }
 
 const genSwatchesHtml = (palette) => {
@@ -129,11 +120,55 @@ const genPalettesHtml = async (projId) => {
   return htmlPalettes;
 }
 
-function handleDelete() {
-  const paletteId = this.id;
+const getHexCodes = () => {
+  let hexCodes = {};
 
-  this.closest('.palette').remove();
-  deletePalette(paletteId);
+  for (let i = 1; i <= 5; i++) {
+    const hexCode = $(`#color-box-${i}-hex`).text();
+
+    hexCodes = {...hexCodes, [`color_${i}`]: hexCode};
+  }
+
+  return hexCodes;
+}
+
+const toggleLockIcon = (btnId) => {
+  $(`#${btnId}`).toggleClass('locked')
+}
+
+const loadProjects = async () => {
+  const projects = await fetchProjects();
+
+  projects.forEach((project) => {
+    const { id, name } = project;
+
+    appendProject(project)
+    appendOption(id, name)
+  })
+}
+
+const appendOption = (projId, projName) => {
+  $('#project-dropdown').append(`
+    <option value=${projId}>${projName}</option>
+  `)
+}
+
+const handleAppendHtml = () => {
+  
+}
+
+const appendProject = async (project) => {
+  const { name, id } = project;
+  const palettes = await genPalettesHtml(id);
+
+  $('.projects-cont').append(`
+    <article id='proj-${id}' class='project-cont'>
+      <h3>${name}</h3>
+      <div class='small-palette-cont'>
+        ${palettes.join('')}
+      </div>
+    </article>
+  `)
 }
 
 const deletePalette = (paletteId) => {
@@ -151,40 +186,20 @@ const deletePalette = (paletteId) => {
     })
 }
 
+const fetchProjects = async () => {
+  const response = await fetch('/api/v1/projects');
+  const jsonResponse = await response.json();
+  
+  return jsonResponse
+}
+
 const fetchProjPalettes = async (projId) => {
   const palettes = await fetch(`/api/v1/projects/${projId}/palettes/`);
 
   return await palettes.json();
 }
 
-const appendOption = (projId, projName) => {
-  $('#project-dropdown').append(`
-    <option value=${projId}>${projName}</option>
-  `)
-}
-
-const handlePaletteSubmit = (e) => {
-  e.preventDefault()
-  const projName = $('select').val()
-  const paletteName = $('#palette-input').val();
-  const hexCodes = getHexCodes();
-  const newPalette = {...hexCodes, name: paletteName, project_id: parseInt(projName)};
-  console.log(newPalette)
-
-  postPalette(newPalette);
-
-  $('#palette-input').val('');
-}
-
-const handleProjectSubmit = (e) => {
-  e.preventDefault();
-  console.log('handle project submit')
-  const projName = $('#project-name-input').val();
-  const newProj = { name: projName }
-  
-  postProject(newProj);
-}
-
+// need to post palette and then append the palette
 const postPalette = (palette) => {
   fetch('/api/v1/palettes/', {
     method: 'POST',
@@ -199,6 +214,7 @@ const postPalette = (palette) => {
   })
 }
 
+// need to post a project and then append the project 
 const postProject = (proj) => {
   fetch('/api/v1/projects/', {
     method: 'POST',
@@ -209,23 +225,12 @@ const postProject = (proj) => {
   }).then(res => res.json())
   .catch(err => console.error(err))
   .then(res => {
-    console.log(res)
-    // call append and add to option
-    $('.projects-cont').fadeOut(1000);
-    $('.projects-cont').fadeIn(1000);
+    const {id, name} = res;
+    appendProject(res);
+    appendOption(id, name);
   });
 }
 
-const getHexCodes = () => {
-  let hexCodes = {};
 
-  for (let i = 1; i <= 5; i++) {
-    const hexCode = $(`#color-box-${i}-hex`).text();
-
-    hexCodes = {...hexCodes, [`color_${i}`]: hexCode};
-  }
-
-  return hexCodes;
-}
 
 
