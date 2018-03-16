@@ -5,6 +5,7 @@ $('#save-palette-form').submit((e) => handlePaletteSubmit(e))
 $('.colors-cont').on('click', '.color-box .color-details-cont .lock-btn', handleLockClick)
 $('.create-project-form').submit((e) => handleProjectSubmit(e))
 $('.projects-cont').on('click', '.small-palette-cont .palette .delete-palette-btn', handleDelete)
+$('.projects-cont').on('click', '.small-palette-cont .palette .palette-name', handlePaletteClick)
 
 const colorBoxes = (() => {
   let boxIds = ['color-box-1', 'color-box-2', 'color-box-3', 'color-box-4', 'color-box-5'];
@@ -81,8 +82,8 @@ const handleProjectSubmit = (e) => {
 }
 
 function handleDelete() {
-  const paletteId = this.id;
-
+  const paletteId = this.closest('.palette').id;
+  console.log('paletteId', paletteId)
   this.closest('.palette').remove();
   deletePalette(paletteId);
 }
@@ -131,12 +132,12 @@ const genPalettesHtml = async (projId) => {
     const swatches = genSwatchesHtml(palette);
 
     return (`
-      <div class='palette'>
-        <button>${name}</button>
+      <div id=${id} class='palette'>
+        <button class='palette-name'>${name}</button>
         <div class='small-colors-cont'>
           ${swatches.join('')}
         </div>
-        <button id=${id} class='delete-palette-btn'></button>
+        <button class='delete-palette-btn'></button>
       </div>
     `)
   })
@@ -183,12 +184,12 @@ const appendPalette = (palette) => {
   const swatches = genSwatchesHtml(palette); 
 
   $(`#proj-${project_id} .small-palette-cont`).append(`
-    <div class='palette'>
-      <button>${name}</button>
+    <div id=${id} class='palette'>
+      <button class='palette-name'>${name}</button>
       <div class='small-colors-cont'>
         ${swatches.join('')}
       </div>
-      <button id=${id} class='delete-palette-btn'></button>
+      <button class='delete-palette-btn'></button>
     </div>
   `)
 }
@@ -209,6 +210,7 @@ const appendProject = async (project) => {
 
 const deletePalette = (paletteId) => {
   const id = {id: paletteId}
+  console.log('palette id', id)
 
   fetch('/api/v1/palettes', {
     method: 'DELETE',
@@ -264,6 +266,11 @@ const postProject = (proj) => {
     appendProject(res);
     appendOption(id, name);
   });
+}
+
+function handlePaletteClick() {
+  const paletteId = this.closest('.palette').id;
+  $(`#${paletteId} .palette`).css('background-color: red')
 }
 
 
