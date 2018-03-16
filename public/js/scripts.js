@@ -268,9 +268,31 @@ const postProject = (proj) => {
   });
 }
 
-function handlePaletteClick() {
+async function handlePaletteClick() {
   const paletteId = this.closest('.palette').id;
-  $(`#${paletteId} .palette`).css('background-color: red')
+  const palette = await fetchPalette(paletteId);
+  updateColorBoxes(palette[0]);
+}
+
+const updateColorBoxes = (palette) => {
+  const unlockedColors = colorBoxes.getUnlockedColors();
+
+  unlockedColors.forEach((color, index) => {
+    const hexCode = palette[`color_${index + 1}`]
+
+    $(`#${color}`).css('background-color', hexCode);
+    $(`#${color}-hex`).text(hexCode.toUpperCase());
+  })
+}
+
+const fetchPalette = async (paletteId) => {
+  try {
+    const response = await fetch(`/api/v1/palettes/${paletteId}`);
+
+    return await response.json();
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 
