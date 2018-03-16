@@ -42,63 +42,78 @@ const projNames = (() => {
   }
 })()
 
-const handleGenColors = () => {
-  const unlockedColors = colorBoxes.getUnlockedColors();
-
-  unlockedColors.forEach((color) => {
-    const hexCode = genRandHex();
-
-    $(`#${color}`).css('background-color', hexCode);
-    $(`#${color}-hex`).text(hexCode.toUpperCase());
-  })
+const appendOption = (projId, projName) => {
+  $('#project-dropdown').append(`
+    <option value=${projId}>${projName}</option>
+  `)
 }
 
-const handlePaletteSubmit = (e) => {
-  e.preventDefault()
-  const projName = $('select').val()
-  const paletteName = $('#palette-input').val();
-  const hexCodes = getHexCodes();
-  const newPalette = {...hexCodes, name: paletteName, project_id: parseInt(projName)};
+const appendPalette = (palette) => {
+  const {project_id, name, id} = palette;
+  const swatches = genSwatchesHtml(palette); 
 
-  postPalette(newPalette);
-
-  $('#palette-input').val('');
+  $(`#proj-${project_id} .small-palette-cont`).append(`
+    <div id=${id} class='palette'>
+      <button class='palette-name'>${name}</button>
+      <div class='small-colors-cont'>
+        ${swatches.join('')}
+      </div>
+      <button class='delete-palette-btn'></button>
+    </div>
+  `)
 }
 
-const handleProjectSubmit = (e) => {
-  e.preventDefault();
-  const projName = $('#project-name-input').val();
-  const isDuplicated = projNames.check(projName);
+const appendProject = async (project) => {
+  const { name, id } = project;
+  const palettes = await genPalettesHtml(id);
 
-  if (isDuplicated) {
-    $('.alert').text('Choose another name. There\'s a project with that name already!')
-  } else {
-    const newProj = { name: projName }
-    
-    $('.alert').text('')
-    projNames.update(name);
-    postProject(newProj);
+  $('.projects-cont').append(`
+    <article id='proj-${id}' class='project-cont'>
+      <h3>${name}</h3>
+      <div class='small-palette-cont'>
+        ${palettes.join('')}
+      </div>
+    </article>
+  `)
+}
+
+const deletePalette = (paletteId) => {
+  const id = {id: paletteId}
+  console.log('palette id', id)
+
+  fetch('/api/v1/palettes', {
+    method: 'DELETE',
+    body: JSON.stringify(id),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => console.log(res))
+    .catch(err => {
+      throw err
+    })
+}
+
+const fetchPalette = async (paletteId) => {
+  try {
+    const response = await fetch(`/api/v1/palettes/${paletteId}`);
+
+    return await response.json();
+  } catch (error) {
+    console.error(error)
   }
 }
 
-function handleDelete() {
-  const paletteId = this.closest('.palette').id;
-  console.log('paletteId', paletteId)
-  this.closest('.palette').remove();
-  deletePalette(paletteId);
+const fetchProjects = async () => {
+  const response = await fetch('/api/v1/projects');
+  const jsonResponse = await response.json();
+  
+  return jsonResponse
 }
 
-function handleLockClick() {
-  const btnId = this.id;
+const fetchProjPalettes = async (projId) => {
+  const palettes = await fetch(`/api/v1/projects/${projId}/palettes/`);
 
-  toggleLock.call(this);
-  toggleLockIcon(btnId);
-}
-
-function toggleLock() {
-  const colorBoxId = this.closest('.color-box').id;
-
-  colorBoxes.updateColors(colorBoxId);
+  return await palettes.json();
 }
 
 const genRandHex = () => {
@@ -157,8 +172,63 @@ const getHexCodes = () => {
   return hexCodes;
 }
 
-const toggleLockIcon = (btnId) => {
-  $(`#${btnId}`).toggleClass('locked')
+function handleDelete() {
+  const paletteId = this.closest('.palette').id;
+
+  this.closest('.palette').remove();
+  deletePalette(paletteId);
+}
+
+const handleGenColors = () => {
+  const unlockedColors = colorBoxes.getUnlockedColors();
+
+  unlockedColors.forEach((color) => {
+    const hexCode = genRandHex();
+
+    $(`#${color}`).css('background-color', hexCode);
+    $(`#${color}-hex`).text(hexCode.toUpperCase());
+  })
+}
+
+async function handlePaletteClick() {
+  const paletteId = this.closest('.palette').id;
+  const palette = await fetchPalette(paletteId);
+  updateColorBoxes(palette[0]);
+}
+
+const handlePaletteSubmit = (e) => {
+  e.preventDefault()
+  const projName = $('select').val()
+  const paletteName = $('#palette-input').val();
+  const hexCodes = getHexCodes();
+  const newPalette = {...hexCodes, name: paletteName, project_id: parseInt(projName)};
+
+  postPalette(newPalette);
+
+  $('#palette-input').val('');
+}
+
+const handleProjectSubmit = (e) => {
+  e.preventDefault();
+  const projName = $('#project-name-input').val();
+  const isDuplicated = projNames.check(projName);
+
+  if (isDuplicated) {
+    $('.alert').text('Choose another name. There\'s a project with that name already!')
+  } else {
+    const newProj = { name: projName }
+    
+    $('.alert').text('')
+    projNames.update(name);
+    postProject(newProj);
+  }
+}
+
+function handleLockClick() {
+  const btnId = this.id;
+
+  toggleLock.call(this);
+  toggleLockIcon(btnId);
 }
 
 const loadProjects = async () => {
@@ -171,70 +241,6 @@ const loadProjects = async () => {
     appendProject(project);
     appendOption(id, name);
   })
-}
-
-const appendOption = (projId, projName) => {
-  $('#project-dropdown').append(`
-    <option value=${projId}>${projName}</option>
-  `)
-}
-
-const appendPalette = (palette) => {
-  const {project_id, name, id} = palette;
-  const swatches = genSwatchesHtml(palette); 
-
-  $(`#proj-${project_id} .small-palette-cont`).append(`
-    <div id=${id} class='palette'>
-      <button class='palette-name'>${name}</button>
-      <div class='small-colors-cont'>
-        ${swatches.join('')}
-      </div>
-      <button class='delete-palette-btn'></button>
-    </div>
-  `)
-}
-
-const appendProject = async (project) => {
-  const { name, id } = project;
-  const palettes = await genPalettesHtml(id);
-
-  $('.projects-cont').append(`
-    <article id='proj-${id}' class='project-cont'>
-      <h3>${name}</h3>
-      <div class='small-palette-cont'>
-        ${palettes.join('')}
-      </div>
-    </article>
-  `)
-}
-
-const deletePalette = (paletteId) => {
-  const id = {id: paletteId}
-  console.log('palette id', id)
-
-  fetch('/api/v1/palettes', {
-    method: 'DELETE',
-    body: JSON.stringify(id),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(res => console.log(res))
-    .catch(err => {
-      throw err
-    })
-}
-
-const fetchProjects = async () => {
-  const response = await fetch('/api/v1/projects');
-  const jsonResponse = await response.json();
-  
-  return jsonResponse
-}
-
-const fetchProjPalettes = async (projId) => {
-  const palettes = await fetch(`/api/v1/projects/${projId}/palettes/`);
-
-  return await palettes.json();
 }
 
 const postPalette = (palette) => {
@@ -268,10 +274,14 @@ const postProject = (proj) => {
   });
 }
 
-async function handlePaletteClick() {
-  const paletteId = this.closest('.palette').id;
-  const palette = await fetchPalette(paletteId);
-  updateColorBoxes(palette[0]);
+function toggleLock() {
+  const colorBoxId = this.closest('.color-box').id;
+
+  colorBoxes.updateColors(colorBoxId);
+}
+
+const toggleLockIcon = (btnId) => {
+  $(`#${btnId}`).toggleClass('locked')
 }
 
 const updateColorBoxes = (palette) => {
@@ -285,15 +295,11 @@ const updateColorBoxes = (palette) => {
   })
 }
 
-const fetchPalette = async (paletteId) => {
-  try {
-    const response = await fetch(`/api/v1/palettes/${paletteId}`);
 
-    return await response.json();
-  } catch (error) {
-    console.error(error)
-  }
-}
+
+
+
+
 
 
 
