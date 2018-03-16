@@ -14,6 +14,12 @@ h1 {
   font-family: 'Oswald', sans-serif;
 }
 
+h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5em;
+  padding-bottom: 10px;
+}
+
 header {
   padding: 20px;
   display: flex;
@@ -52,12 +58,14 @@ select {
   background-color: #FEC601;
   font-size: 1.2em;
   padding: 10px 15px;
-  margin: 10px 0 20px;
+  margin: 20px 0 40px;
 }
 
 .select-div {
+  border: 2px solid #73BFB8;
   display: inline-block;
-  background-color: #3DA5D9; 
+  background-color: white;
+  padding: 5px 10px; 
 }
 
 .header-icon {
@@ -86,6 +94,25 @@ select {
   justify-content: flex-end;
   height: 350px;
   width: 250px;
+}
+
+.create-project-label {
+  font-family: 'Oswald', sans-serif;
+  display: block;
+  text-align: center;
+  font-size: 1.8em;
+  padding-bottom: 15px;
+}
+
+.create-project-form {
+  padding-bottom: 30px;
+}
+
+.create-palette-form {
+  display: flex;
+  justify-content: space-between;
+  width: 510px;
+  align-items: center;
 }
 
 .hex-text {
@@ -120,8 +147,8 @@ select {
 }
 
 .save-btn {
-  background-color: #3DA5D9;
-  color: white;
+  background-color: #FEC601;
+  height: 36px;
   padding: 5px 10px;
   font-size: 1em;
 }
@@ -136,6 +163,8 @@ select {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px 140px;
 }
 
 .project-cont {
@@ -164,11 +193,15 @@ select {
 
 .palette-name {
   min-width: 170px;
+  padding: 5px 10px;
+  border: 2px solid #73BFB8;
+  margin-right: 10px;
 }
 
 .palette {
   display: flex;
   margin: 10px 0;
+  align-items: center;
 }
 
 .small-palette-color {
