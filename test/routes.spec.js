@@ -136,6 +136,38 @@ describe('API Routes', () => {
     });
   });
 
+  describe('GET /api/v1/palettes/:id', () => {
+    it('should return palette with associated id', () => {
+      return chai.request(server)
+        .get('/api/v1/palettes/1')
+        .then(response => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
+          response.body[0].should.have.property('id');
+          response.body[0].id.should.equal(1);
+          response.body[0].should.have.property('name');
+          response.body[0].name.should.equal('Warm Colors');
+          response.body[0].should.have.property('project_id');
+          response.body[0].project_id.should.equal(1);
+          response.body[0].should.have.property('color_1');
+          response.body[0].color_1.should.equal('#3E92CC');
+          response.body[0].should.have.property('color_2');
+          response.body[0].color_2.should.equal('#3E92CC');
+          response.body[0].should.have.property('color_3');
+          response.body[0].color_3.should.equal('#3E92CC');
+          response.body[0].should.have.property('color_4');
+          response.body[0].color_4.should.equal('#3E92CC');
+          response.body[0].should.have.property('color_5');
+          response.body[0].color_5.should.equal('#3E92CC');
+        })
+        .catch(error => {
+          throw error;
+        })
+    })
+  })
+
   describe('POST /api/v1/palettes', () => {
     it('should create a new palette', () => {
       return chai.request(server)
