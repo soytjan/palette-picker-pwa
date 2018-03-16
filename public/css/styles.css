@@ -181,6 +181,7 @@ select {
 }
 
 .delete-palette-btn {
+  background: transparent;
   background-image: url('../assets/trash.png');
   background-size: cover;
   height: 25px;
