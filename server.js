@@ -85,7 +85,7 @@ app.get('/api/v1/projects/:id/palettes/', (request, response) => {
         response.status(200).json(palettes);
       } else {
         response.status(404).json({
-          error: `Could not find pallettes associated with project id ${request.params.id}`
+          error: `Could not find palettes associated with project id ${request.params.id}`
         });
       }
     })
@@ -93,6 +93,22 @@ app.get('/api/v1/projects/:id/palettes/', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+app.get('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).select()
+    .then(palette => {
+      if (palette.length) {
+        response.status(200).json(palette);
+      } else {
+        response.status(404).json({
+          error: `Could not find palette associated with palette id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+})
 
 app.delete('/api/v1/palettes/', (request, response) => {
   database('palettes').where('id', request.body.id).del()

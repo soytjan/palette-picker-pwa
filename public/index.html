@@ -48,15 +48,17 @@
     </section>
     <button id='gen-colors-btn'>Generate New Palette!</button>
     <form id='save-palette-form' class='create-palette-form'>
-      <select name="project-dropdown" id="project-dropdown">
-      </select>
+      <div class='select-div'>
+        <select name="project-dropdown" id="project-dropdown">
+        </select> 
+      </div>
       <input id='palette-input' type="text" placeholder="Palette name">
       <button class='save-btn'>Save Palette</button>
     </form>
   </section>
   <section class='bottom-section'>
     <form class='create-project-form'>
-      <label for='project-name-input'>Create a new project:</label>
+      <label for='project-name-input' class='create-project-label'>Create a new project:</label>
       <input id='project-name-input' type='text' placeholder='New project name'>
       <button class='save-btn'>Save Project</button>
     </form>
