@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/reset.css" type="text/css">
   <link rel="stylesheet" href="./css/styles.css" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato|Oswald" rel="stylesheet">
   <title>Palette Picker</title>
 </head>
 <body>
@@ -51,15 +51,16 @@
       <select name="project-dropdown" id="project-dropdown">
       </select>
       <input id='palette-input' type="text" placeholder="Palette name">
-      <button>Save Palette</button>
+      <button class='save-btn'>Save Palette</button>
     </form>
   </section>
   <section class='bottom-section'>
     <form class='create-project-form'>
       <label for='project-name-input'>Create a new project:</label>
       <input id='project-name-input' type='text' placeholder='New project name'>
-      <button>Save Project</button>
+      <button class='save-btn'>Save Project</button>
     </form>
+    <p class='alert'></p>
     <section class='projects-cont'>
     </section>
   </section>
@@ -67,18 +68,3 @@
   <script type="text/javascript" src="./js/scripts.js"></script>
 </body>
 </html>
-
-<!-- <article class='project-cont'>
- <h3>Project 1</h3>
-  <div class='small-palette-cont'>
-    <button>Palette 1</button>
-    <div class='small-palette-cont'>
-      <div class='small-palette-color'></div>
-      <div class='small-palette-color'></div>
-      <div class='small-palette-color'></div>
-      <div class='small-palette-color'></div>
-      <div class='small-palette-color'></div>
-    </div>
-    <button class='delete-palette-btn'>Delete Me</button>
-  </div>
-</article> -->

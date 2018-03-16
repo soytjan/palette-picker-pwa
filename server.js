@@ -38,8 +38,10 @@ app.post('/api/v1/projects/', (request, response) => {
   }
 
   database('projects').insert(project, 'id')
-    .then(project => {
-      response.status(201).json({ id: project[0] })
+    .then(proj => {
+      const { name } = project;
+      
+      response.status(201).json({ id: proj[0], name })
     })
     .catch(error => {
       response.status(500).json({ error })
@@ -68,8 +70,8 @@ app.post('/api/v1/palettes', (request, response) => {
   }
 
   database('palettes').insert(palette, 'id')
-    .then(palette => {
-      response.status(201).json({ id: palette[0] })
+    .then(pal => {
+      response.status(201).json({ ...palette, id: pal[0] })
     })
     .catch(error => {
       response.status(500).json({ error })
@@ -92,6 +94,18 @@ app.get('/api/v1/projects/:id/palettes/', (request, response) => {
     });
 });
 
+app.delete('/api/v1/palettes/', (request, response) => {
+  database('palettes').where('id', request.body.id).del()
+    .then(palette => {
+      response.status(200).json();
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    })
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} server running on port 3000.`)
 });
+
+module.exports = app;
