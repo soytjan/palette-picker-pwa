@@ -79,7 +79,6 @@ const appendProject = async (project) => {
 
 const deletePalette = (paletteId) => {
   const id = {id: paletteId}
-  console.log('palette id', id)
 
   fetch('/api/v1/palettes', {
     method: 'DELETE',
