@@ -110,7 +110,7 @@ const fetchProjects = async () => {
 }
 
 const fetchProjPalettes = async (projId) => {
-  const palettes = await fetch(`/api/v1/projects/${projId}/palettes/`);
+  const palettes = await fetch(`/api/v1/projects/${projId}/palettes`);
 
   return await palettes.json();
 }
