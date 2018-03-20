@@ -12,12 +12,19 @@ app.locals.title = 'Palette Picker';
 app.use(bodyParser.json());
 app.use(express.static('public'))
 
-app.get('*', function(req, res) {  
-    res.redirect('https://' + req.headers.host + req.url);
+// app.get('*', function(req, res) {  
+//     res.redirect('https://' + req.headers.host + req.url);
 
-    // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
-    // res.redirect('https://example.com' + req.url);
-})
+//     // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
+//     // res.redirect('https://example.com' + req.url);
+// })
+
+app.use((req, res, next) =>
+  console.log('the request is secure', req.secure)
+  // check if it is a secure (https) request
+  // if not redirect to the equivalent https url
+  !req.secure ? res.redirect('https://' + req.hostname + req.url) : next()
+)
 
 app.get('/', (request, response) => {
 
