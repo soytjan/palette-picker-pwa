@@ -12,24 +12,14 @@ app.locals.title = 'Palette Picker';
 app.use(bodyParser.json());
 app.use(express.static('public'))
 
-// app.get('*', function(req, res) {  
-//     res.redirect('https://' + req.headers.host + req.url);
+const requireHTTPS = (req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect('https://' + req.get('host') + req.url);
+  }
+    next();
+};
 
-//     // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
-//     // res.redirect('https://example.com' + req.url);
-// })
-
-// app.use(function(req, res, next){
-//   if (environment === 'production') {
-//     if(req.header('x-forwarded-proto') !== 'https'){
-//       res.redirect('https://' + req.header('host') + req.url);
-//     }else{
-//       next();
-//     }
-//   }
-
-//   next();
-// });
+if (process.env.NODE_ENV === 'production') { app.use(requireHTTPS); }
 
 app.get('/', (request, response) => {
 
