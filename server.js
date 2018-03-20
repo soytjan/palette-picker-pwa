@@ -20,16 +20,16 @@ app.use(express.static('public'))
 // })
 
 app.use(function(req, res, next){
-  if (environment !== 'production') {
-    next();
+  if (environment === 'production') {
+    if(req.header('x-forwarded-proto') !== 'https'){
+      res.redirect('https://' + req.header('host') + req.url);
+    }else{
+      next();
+    }
   }
 
-  if(req.header('x-forwarded-proto') !== 'https'){
-    res.redirect('https://' + req.header('host') + req.url);
-  } else{
-    next();
-  }
-})
+  next();
+});
 
 app.get('/', (request, response) => {
 
