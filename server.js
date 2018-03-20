@@ -19,17 +19,17 @@ app.use(express.static('public'))
 //     // res.redirect('https://example.com' + req.url);
 // })
 
-app.use(function(req, res, next){
-  if (environment === 'production') {
-    if(req.header('x-forwarded-proto') !== 'https'){
-      res.redirect('https://' + req.header('host') + req.url);
-    }else{
-      next();
-    }
-  }
+// app.use(function(req, res, next){
+//   if (environment === 'production') {
+//     if(req.header('x-forwarded-proto') !== 'https'){
+//       res.redirect('https://' + req.header('host') + req.url);
+//     }else{
+//       next();
+//     }
+//   }
 
-  next();
-});
+//   next();
+// });
 
 app.get('/', (request, response) => {
 
