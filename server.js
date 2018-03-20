@@ -19,11 +19,12 @@ app.use(express.static('public'))
 //     // res.redirect('https://example.com' + req.url);
 // })
 
-app.use((req, res, next) =>
+app.use((req, res, next) => {
   console.log('the request is secure', req.secure)
   // check if it is a secure (https) request
   // if not redirect to the equivalent https url
   !req.secure ? res.redirect('https://' + req.hostname + req.url) : next()
+  }
 )
 
 app.get('/', (request, response) => {
