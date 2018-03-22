@@ -7,6 +7,19 @@ $('.create-project-form').submit((e) => handleProjectSubmit(e))
 $('.projects-cont').on('click', '.small-palette-cont .palette .delete-palette-btn', handleDelete)
 $('.projects-cont').on('click', '.small-palette-cont .palette .palette-name', handlePaletteClick)
 
+// service worker event listener
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => {
+        console.log('ServiceWorker registration successful');
+      }).catch(err => {
+        console.log(`ServiceWorker registratoin failed: ${err}`);
+      });
+  });
+}
+
 const colorBoxes = (() => {
   let boxIds = ['color-box-1', 'color-box-2', 'color-box-3', 'color-box-4', 'color-box-5'];
 
@@ -41,6 +54,7 @@ const projNames = (() => {
     }
   }
 })()
+
 
 const appendOption = (projId, projName) => {
   $('#project-dropdown').append(`
