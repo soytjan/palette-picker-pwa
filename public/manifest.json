@@ -1,0 +1,15 @@
+{
+  "short_name": "palettepicker",
+  "name": "Amanda Palette Picker",
+  "background_color": "#84BDB8",
+  "theme_color": "#84BDB8",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "assets/paint-palette-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "http://palette-picker-pwa-tjan.herokuapp.com/"
+}
