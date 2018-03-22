@@ -6,9 +6,9 @@
   "display": "fullscreen",
   "icons": [
     {
-      "src": "assets/paint-palette-192.png",
+      "src": "assets/paint-palette.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "512x512"
     }
   ],
   "start_url": "http://palette-picker-pwa-tjan.herokuapp.com/"
